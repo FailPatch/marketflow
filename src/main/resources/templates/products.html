@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketFlow</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main>
+    <section class="hero-market">
+        <div class="hero-copy">
+            <p class="eyebrow">MarketFlow Prime</p>
+            <h1>Compra, vende y controla tu marketplace desde una sola plataforma.</h1>
+            <p>Catalogo aprobado por admin, vendedores verificados, cupones, carrito, comprobantes, pagos y reseñas post-compra.</p>
+            <form class="hero-search" th:action="@{/products}" method="get">
+                <input name="query" th:value="${query}" placeholder="Buscar productos, categorias o marcas">
+                <button class="glow-button" type="submit">Buscar</button>
+            </form>
+            <div class="hero-actions">
+                <a class="ghost-button" href="#catalogo">Explorar tienda</a>
+                <a class="ghost-button" th:href="@{/seller}">Publicar producto</a>
+            </div>
+        </div>
+        <div class="deal-board">
+            <span class="pill">Oferta relampago</span>
+            <h2>Hasta 35% en tecnologia y hogar</h2>
+            <p class="muted">Productos con stock visible, aprobacion admin y reseñas reales del comprador.</p>
+            <div class="mini-products">
+                <article th:each="product : ${featured}">
+                    <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                    <strong th:text="${product.name}">Producto</strong>
+                    <span>S/ <span th:text="${product.price}">0.00</span></span>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="container compact" id="categorias">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Compra por categoria</p>
+                <h1>Encuentra rapido lo que necesitas</h1>
+            </div>
+        </div>
+        <div class="category-strip">
+            <a th:href="@{/products} + '#categorias'" th:classappend="${category == null or category == ''} ? 'active'">Todo</a>
+            <a th:each="cat : ${categories}" th:href="@{/products(category=${cat})} + '#categorias'" th:classappend="${cat == category} ? 'active'" th:text="${cat}">Categoria</a>
+        </div>
+    </section>
+
+    <section class="container compact" id="ofertas">
+        <div class="benefit-grid">
+            <article><strong>Compra protegida</strong><span>El admin revisa publicaciones y reseñas.</span></article>
+            <article><strong>Cupones y regalos</strong><span>MARKET10 y tarjeta REGALO100 para compradores frecuentes.</span></article>
+            <article><strong>Pago flexible</strong><span>Efectivo, Yape, Plin, tarjeta o mixto.</span></article>
+            <article><strong>Stock controlado</strong><span>No permite vender mas unidades de las disponibles.</span></article>
+        </div>
+    </section>
+
+    <section class="container" id="catalogo">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Catalogo aprobado</p>
+                <h1>Productos disponibles</h1>
+                <p class="muted">Solo aparecen publicaciones visibles y aprobadas por administracion.</p>
+            </div>
+            <a class="floating-cart static" th:href="@{/cart}">Carrito <span th:text="${cartCount}">0</span></a>
+        </div>
+        <div class="shop-layout">
+            <aside class="filter-panel">
+                <h2>Filtros</h2>
+                <form th:action="@{/products}" method="get">
+                    <label>Buscar <input name="query" th:value="${query}" placeholder="Ej. audifonos"></label>
+                    <label>Categoria
+                        <select name="category">
+                            <option value="">Todas</option>
+                            <option th:each="cat : ${categories}" th:value="${cat}" th:selected="${cat == category}" th:text="${cat}">Categoria</option>
+                        </select>
+                    </label>
+                    <button class="glow-button" type="submit">Aplicar filtros</button>
+                </form>
+                <div class="coupon-box">
+                    <span class="pill">Cupon activo</span>
+                    <strong>MARKET10</strong>
+                    <p class="muted">Usalo en el carrito para 10% de descuento.</p>
+                </div>
+            </aside>
+            <div class="product-grid">
+                <article class="product-card" th:each="product : ${products}">
+                    <div class="product-media">
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                        <span class="stock-badge">Stock <span th:text="${product.stock}">0</span></span>
+                    </div>
+                    <div class="card-body">
+                        <p class="eyebrow" th:text="${product.category}">Categoria</p>
+                        <h2 th:text="${product.name}">Producto</h2>
+                        <p class="muted" th:text="${product.description}">Descripcion</p>
+                        <div class="rating-line">
+                            <span class="stars" th:text="${product.filledStars}">★★★★★</span><span class="stars empty" th:text="${product.emptyStars}"></span>
+                            <span><span th:text="${#numbers.formatDecimal(product.ratingAverage, 1, 1)}">5.0</span>/5 · <span th:text="${product.reviewCount}">0</span> reseñas · vendedor verificado</span>
+                        </div>
+                        <span class="price">S/ <span th:text="${product.price}">0.00</span></span>
+                        <form th:action="@{/cart/add}" method="post">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <button class="glow-button full" type="submit">Agregar al carrito</button>
+                        </form>
+                    </div>
+                </article>
+                <p class="form-note" th:if="${#lists.isEmpty(products)}">No encontramos productos con esos filtros.</p>
+            </div>
+        </div>
+    </section>
+</main>
+<a class="floating-cart" th:href="@{/cart}">Carrito <span th:text="${cartCount}">0</span></a>
+</body>
+</html>

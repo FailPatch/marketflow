@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - MarketFlow</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main class="container">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Checkout seguro</p>
+            <h1>Carrito de compras</h1>
+            <p class="muted">Revisa cantidades, aplica cupones y elige comprobante y metodo de pago.</p>
+        </div>
+        <a class="ghost-button" th:href="@{/products#catalogo}">Seguir comprando</a>
+    </div>
+
+    <section class="checkout-layout">
+        <div class="cart-list">
+            <article class="cart-row rich" th:each="item : ${cart}">
+                <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}">
+                <div>
+                    <p class="eyebrow" th:text="${item.product.category}">Categoria</p>
+                    <h2 th:text="${item.product.name}">Producto</h2>
+                    <p class="muted">S/ <span th:text="${item.product.price}">0.00</span> por unidad</p>
+                    <strong>S/ <span th:text="${item.subtotal}">0.00</span></strong>
+                </div>
+                <div class="qty-actions">
+                    <form th:action="@{/cart/decrease}" method="post"><input type="hidden" name="productId" th:value="${item.product.id}"><button class="icon-button" type="submit">-</button></form>
+                    <span th:text="${item.quantity}">1</span>
+                    <form th:action="@{/cart/increase}" method="post"><input type="hidden" name="productId" th:value="${item.product.id}"><button class="icon-button" type="submit">+</button></form>
+                    <form th:action="@{/cart/remove}" method="post"><input type="hidden" name="productId" th:value="${item.product.id}"><button class="ghost-button" type="submit">Quitar</button></form>
+                </div>
+            </article>
+            <p class="form-note empty-cart" th:if="${#lists.isEmpty(cart)}">Tu carrito esta vacio. Vuelve al catalogo y agrega productos.</p>
+        </div>
+
+        <aside class="checkout-panel">
+            <form class="coupon-form" th:action="@{/cart}" method="get">
+                <label>Codigo de descuento
+                    <span class="inline-field">
+                        <input name="coupon" th:value="${coupon}" placeholder="MARKET10 o REGALO100">
+                        <button class="ghost-button" type="submit">Aplicar</button>
+                    </span>
+                </label>
+            </form>
+
+            <form class="glass-form" th:action="@{/checkout}" method="post">
+                <h2>Completar venta</h2>
+                <label>Comprobante
+                    <select name="receipt">
+                        <option>Ticket</option>
+                        <option>Boleta</option>
+                        <option>Factura</option>
+                    </select>
+                </label>
+                <label>Metodo de pago
+                    <select name="payment" data-payment-select>
+                        <option value="Efectivo contra entrega">Efectivo contra entrega</option>
+                        <option value="Yape">Yape</option>
+                        <option value="Plin">Plin</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Mixto">Mixto</option>
+                    </select>
+                </label>
+                <input type="hidden" name="coupon" th:value="${coupon}">
+
+                <section class="payment-details" data-payment="Efectivo contra entrega">
+                    <p class="success">Pagas cuando recibes el producto o al recogerlo.</p>
+                </section>
+                <section class="payment-details hidden" data-payment="Yape">
+                    <div class="qr-box">QR</div>
+                    <label>N° de operacion <input placeholder="Ej. 845219" minlength="3"></label>
+                </section>
+                <section class="payment-details hidden" data-payment="Plin">
+                    <div class="qr-box alt">QR</div>
+                    <label>N° de operacion <input placeholder="Ej. 735901" minlength="3"></label>
+                </section>
+                <section class="payment-details hidden" data-payment="Tarjeta">
+                    <label>Banco o tarjeta
+                        <select><option>Visa</option><option>Mastercard</option><option>BCP</option><option>BBVA</option><option>Interbank</option></select>
+                    </label>
+                    <label>Numero de tarjeta <input placeholder="0000 0000 0000 0000"></label>
+                    <div class="split-fields"><label>Vence <input placeholder="MM/AA"></label><label>CVV <input placeholder="123"></label></div>
+                </section>
+                <section class="payment-details hidden" data-payment="Mixto">
+                    <label>Monto en efectivo <input type="number" min="0" step="0.01" placeholder="S/ 20.00"></label>
+                    <label>Segundo metodo <select><option>Yape</option><option>Plin</option><option>Tarjeta</option></select></label>
+                    <label>N° operacion o tarjeta <input placeholder="Operacion / referencia"></label>
+                </section>
+
+                <div class="total-card">
+                    <p><span>Subtotal</span><strong>S/ <span th:text="${total}">0.00</span></strong></p>
+                    <p><span>Descuento</span><strong>S/ <span th:text="${discount}">0.00</span></strong></p>
+                    <p class="total-line"><span>Total</span><strong>S/ <span th:text="${payableTotal}">0.00</span></strong></p>
+                </div>
+                <button class="glow-button full" type="submit" th:disabled="${#lists.isEmpty(cart)}">Confirmar compra</button>
+            </form>
+        </aside>
+    </section>
+</main>
+</body>
+</html>

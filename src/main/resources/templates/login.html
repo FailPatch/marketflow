@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MarketFlow</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main class="container">
+    <section class="glass-form" style="max-width:520px;margin:auto">
+        <p class="eyebrow">Acceso</p>
+        <h1>Iniciar sesion</h1>
+        <p class="alert" th:if="${error}" th:text="${error}"></p>
+        <form th:action="@{/login}" method="post" class="glass-form">
+            <label>Correo <input type="email" name="email" value="comprador@demo.com" required></label>
+            <label>Contrasena <input type="password" name="password" value="123456" required></label>
+            <label>Rol
+                <select name="role">
+                    <option value="BUYER">Comprador</option>
+                    <option value="SELLER">Vendedor</option>
+                    <option value="ADMIN">Administrador</option>
+                    <option value="EMPLOYEE">Empleado</option>
+                </select>
+            </label>
+            <button class="glow-button" type="submit">Entrar</button>
+        </form>
+        <p class="form-note">No tienes cuenta? <a th:href="@{/register}">Registrate aqui</a></p>
+    </section>
+</main>
+</body>
+</html>
+

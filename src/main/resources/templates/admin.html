@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - MarketFlow</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main class="container">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Administrador</p>
+            <h1>Centro de control</h1>
+            <p class="muted">El admin puede revisar la tienda como comprador, entrar como vendedor, controlar publicaciones, penalizaciones, reseñas y auditoria.</p>
+        </div>
+    </div>
+
+    <section class="admin-quick-actions">
+        <a class="ghost-button" th:href="@{/products}">Ver como comprador</a>
+        <a class="ghost-button" th:href="@{/cart}">Checkout comprador</a>
+        <a class="ghost-button" th:href="@{/seller}">Ver como vendedor</a>
+        <a class="ghost-button" th:href="@{/articles}">Gestion empleado</a>
+        <a class="ghost-button" th:href="@{/purchase-order}">Orden de compra</a>
+    </section>
+
+    <section class="metrics">
+        <div class="metric"><span>Productos</span><strong th:text="${#lists.size(products)}">0</strong></div>
+        <div class="metric"><span>Vendedores</span><strong th:text="${#lists.size(sellers)}">0</strong></div>
+        <div class="metric"><span>Reseñas</span><strong th:text="${#lists.size(reviews)}">0</strong></div>
+    </section>
+
+    <h2>Productos publicados</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>ID</th><th>Producto</th><th>Stock</th><th>Rating</th><th>Estado</th><th>Accion</th></tr></thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.stock}"></td>
+                <td><span th:text="${#numbers.formatDecimal(product.ratingAverage, 1, 1)}">5.0</span>/5</td>
+                <td th:text="${product.approved ? 'Visible' : 'Pendiente'}"></td>
+                <td>
+                    <form th:action="@{/admin/product}" method="post">
+                        <input type="hidden" name="productId" th:value="${product.id}">
+                        <button class="ghost-button" type="submit" th:text="${product.approved ? 'Pausar' : 'Aprobar'}"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Usuarios vendedores</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Vendedor</th><th>Correo</th><th>Penalizaciones</th><th>Motivos</th><th>Acciones</th></tr></thead>
+            <tbody>
+            <tr th:each="seller : ${sellers}">
+                <td th:text="${seller.name}"></td>
+                <td th:text="${seller.email}"></td>
+                <td th:text="${seller.penalties}"></td>
+                <td><span th:each="reason : ${seller.penaltyReasons}" th:text="${reason} + ' | '"></span></td>
+                <td>
+                    <form th:action="@{/admin/penalize}" method="post" class="actions-row">
+                        <input type="hidden" name="email" th:value="${seller.email}">
+                        <input name="reason" placeholder="Motivo" required>
+                        <button class="ghost-button" type="submit">Penalizar</button>
+                    </form>
+                    <form th:action="@{/admin/remove-penalty}" method="post">
+                        <input type="hidden" name="email" th:value="${seller.email}">
+                        <button class="ghost-button" type="submit">Retirar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Reseñas de compradores</h2>
+    <section class="grid">
+        <article class="review-card" th:each="review : ${reviews}">
+            <h3 th:text="${review.productName}"></h3>
+            <p class="eyebrow"><span th:text="${review.rating}"></span>/5 - <span th:text="${review.condition}"></span></p>
+            <p th:text="${review.comment}"></p>
+            <form th:action="@{/admin/penalize}" method="post">
+                <input type="hidden" name="email" th:value="${review.sellerEmail}">
+                <input type="hidden" name="reason" th:value="'Reseña negativa en ' + ${review.productName} + ': ' + ${review.comment}">
+                <button class="ghost-button" type="submit">Penalizar vendedor</button>
+            </form>
+        </article>
+    </section>
+
+    <h2>Auditoria</h2>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Modulo</th><th>Accion</th><th>Detalle</th></tr></thead>
+            <tbody><tr th:each="log : ${logs}"><td th:text="${log.module}"></td><td th:text="${log.action}"></td><td th:text="${log.detail}"></td></tr></tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

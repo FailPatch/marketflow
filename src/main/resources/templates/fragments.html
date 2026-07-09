@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">M</span>
+            <span>MarketFlow</span>
+        </a>
+        <nav class="nav">
+            <a th:href="@{/}">Inicio</a>
+            <a th:href="@{/products#categorias}">Categorias</a>
+            <a th:href="@{/products#ofertas}">Ofertas</a>
+            <a th:href="@{/products(category='Moda')}">Moda</a>
+            <a th:if="${session.user != null and (session.user.role.name() == 'SELLER' or session.user.role.name() == 'ADMIN')}" th:href="@{/seller}" th:text="${session.user.role.name() == 'ADMIN' ? 'Vista vendedor' : 'Vender'}">Vender</a>
+            <a th:if="${session.user != null and (session.user.role.name() == 'BUYER' or session.user.role.name() == 'ADMIN')}" th:href="@{/cart}">Carrito</a>
+            <a th:if="${session.user != null and session.user.role.name() == 'ADMIN'}" th:href="@{/admin}">Admin</a>
+            <a th:if="${session.user != null and (session.user.role.name() == 'ADMIN' or session.user.role.name() == 'EMPLOYEE')}" th:href="@{/dashboard}">Dashboard</a>
+            <a th:if="${session.user != null and (session.user.role.name() == 'ADMIN' or session.user.role.name() == 'EMPLOYEE')}" th:href="@{/articles}">Gestion</a>
+            <a th:href="@{/faq}">Ayuda</a>
+        </nav>
+        <div>
+            <a class="glow-button" th:if="${session.user == null}" th:href="@{/login}">Ingresar</a>
+            <div class="profile-badge" th:if="${session.user != null}">
+                <span class="brand-mark" th:text="${#strings.substring(session.user.name,0,1)}">U</span>
+                <span>
+                    <strong th:text="${session.user.name}">Usuario</strong>
+                    <small th:text="${session.user.role}">ROL</small>
+                </span>
+                <a class="icon-button" th:href="@{/logout}" data-confirm-logout title="Cerrar sesion">x</a>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/marketplace.js}" defer></script>
+</header>
+</body>
+</html>

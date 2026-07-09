@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Proveedores</title><link rel="stylesheet" th:href="@{/css/styles.css}"></head><body><div th:replace="~{fragments :: header}"></div><main class="container">
+<h1>Proveedores</h1><section class="layout-2"><form class="glass-form" th:action="@{/providers}" method="post"><h2>Registrar proveedor</h2><label>Razon social <input name="name" required></label><label>RUC <input name="ruc" required></label><button class="glow-button">Grabar</button></form><div class="table-wrap"><table><thead><tr><th>ID</th><th>Proveedor</th><th>RUC</th></tr></thead><tbody><tr th:each="provider : ${providers}"><td th:text="${provider.id}"></td><td th:text="${provider.name}"></td><td th:text="${provider.ruc}"></td></tr></tbody></table></div></section>
+</main></body></html>
+

@@ -1,0 +1,9 @@
+target/
+.git/
+*.zip
+*.war
+.env
+server.log
+server-error.log
+.idea/
+.vscode/

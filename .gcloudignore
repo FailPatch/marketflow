@@ -1,0 +1,7 @@
+target/
+.git/
+*.zip
+*.war
+.env
+.idea/
+.vscode/

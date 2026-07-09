@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Vendedor</title><link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main class="container">
+    <div class="section-head"><div><p class="eyebrow">Panel vendedor</p><h1>Publicaciones e inventario</h1><p class="muted">Publica productos con imagen; el admin decide si se muestran.</p></div></div>
+    <p class="alert" th:if="${session.user.penalties >= 4}">Alerta roja: tienes 4 penalizaciones. A la quinta seras vetado de la pagina.</p>
+    <section class="layout-2">
+        <form class="glass-form" th:action="@{/seller/products}" method="post" enctype="multipart/form-data">
+            <h2>Publicar producto</h2>
+            <label>Nombre <input name="name" required></label>
+            <label>Categoria <select name="category"><option>Tecnologia</option><option>Hogar</option><option>Moda</option><option>Deportes</option></select></label>
+            <label>Precio <input type="number" step="0.01" min="1" name="price" required></label>
+            <label>Stock <input type="number" min="1" name="stock" required></label>
+            <label>Subir imagen <input type="file" name="imageFile" accept="image/*"></label>
+            <label>URL de imagen opcional <input name="imageUrl" placeholder="https://..."></label>
+            <label>Descripcion <textarea name="description" required></textarea></label>
+            <button class="glow-button" type="submit">Publicar</button>
+        </form>
+        <section>
+            <h2>Mis publicaciones</h2>
+            <div class="table-wrap"><table><thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Estado</th></tr></thead><tbody>
+            <tr th:each="product : ${products}"><td th:text="${product.name}"></td><td th:text="${product.price}"></td><td th:text="${product.stock}"></td><td th:text="${product.approved ? 'Aprobado' : 'Pendiente'}"></td></tr>
+            </tbody></table></div>
+        </section>
+    </section>
+</main>
+</body>
+</html>
