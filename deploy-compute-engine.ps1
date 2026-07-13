@@ -4,7 +4,7 @@ param(
     [string]$JarPath = "target\marketplace-cloud-1.0.0.jar"
 )
 
-Write-Host "Compilando MarketFlow..."
+Write-Host "Compilando NEXORA..."
 mvn clean package
 
 Write-Host "Subiendo JAR a la VM $InstanceName..."

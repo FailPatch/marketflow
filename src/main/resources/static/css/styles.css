@@ -20,6 +20,7 @@ body {
     color: var(--ink);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
+    overflow-x: hidden;
 }
 button:disabled { cursor: not-allowed; filter: grayscale(0.55); opacity: 0.58; }
 a { color: inherit; }
@@ -44,8 +45,25 @@ a { color: inherit; }
     align-items: center;
     display: inline-flex;
     font-weight: 900;
-    gap: 10px;
+    gap: 0;
     text-decoration: none;
+}
+.brand-logo {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    height: 58px;
+    object-fit: contain;
+    object-position: center;
+    padding: 0;
+    width: 240px;
+}
+.nexora-header-logo {
+    display: block;
+    height: 72px;
+    object-fit: contain;
+    object-position: center;
+    width: 300px;
 }
 .brand-mark {
     align-items: center;
@@ -55,6 +73,7 @@ a { color: inherit; }
     height: 34px;
     justify-content: center;
     width: 34px;
+    flex: 0 0 auto;
 }
 .nav {
     display: flex;
@@ -604,5 +623,296 @@ td { color: var(--muted); }
     .mini-products,
     .cart-row.rich {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .topbar {
+        position: sticky;
+    }
+    .topbar-inner {
+        align-items: center;
+        gap: 10px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 10px 12px 8px;
+    }
+    .brand {
+        min-width: 0;
+    }
+    .brand-mark {
+        height: 30px;
+        width: 30px;
+    }
+    .brand-logo {
+        height: 46px;
+        padding: 0;
+        width: 184px;
+    }
+    .nexora-header-logo {
+        height: 54px;
+        width: 210px;
+    }
+    .topbar-inner > div:last-child {
+        justify-self: end;
+    }
+    .topbar .glow-button {
+        padding: 9px 14px;
+    }
+    .profile-badge {
+        max-width: 178px;
+    }
+    .profile-badge strong,
+    .profile-badge small {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .nav {
+        grid-column: 1 / -1;
+        flex-wrap: nowrap;
+        gap: 8px;
+        justify-content: flex-start;
+        margin: 0 -12px;
+        overflow-x: auto;
+        padding: 2px 12px 4px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .nav::-webkit-scrollbar {
+        display: none;
+    }
+    .nav a,
+    .ghost-button,
+    .icon-button {
+        flex: 0 0 auto;
+        font-size: 14px;
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+    .container {
+        padding: 26px 14px;
+    }
+    .compact {
+        padding-top: 20px;
+    }
+    .hero-market {
+        gap: 16px;
+        min-height: auto;
+        padding: 22px 14px 18px;
+    }
+    .hero-copy h1 {
+        font-size: clamp(34px, 12vw, 52px);
+        line-height: 1.02;
+    }
+    .hero-copy p {
+        font-size: 16px;
+    }
+    .hero-actions {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+    .hero-search {
+        margin-top: 16px;
+    }
+    .deal-board {
+        border-radius: 20px;
+        min-height: auto;
+        padding: 16px;
+    }
+    .deal-board h2 {
+        font-size: 24px;
+    }
+    .mini-products {
+        display: flex;
+        gap: 10px;
+        margin-left: -2px;
+        margin-right: -2px;
+        overflow-x: auto;
+        padding: 2px 2px 6px;
+        scrollbar-width: none;
+    }
+    .mini-products::-webkit-scrollbar {
+        display: none;
+    }
+    .mini-products article {
+        flex: 0 0 124px;
+    }
+    .mini-products img {
+        height: 86px;
+    }
+    .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .section-head h1 {
+        font-size: clamp(30px, 10vw, 42px);
+        line-height: 1.08;
+    }
+    .category-strip {
+        flex-wrap: nowrap;
+        margin: 0 -14px;
+        overflow-x: auto;
+        padding: 0 14px 6px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .category-strip::-webkit-scrollbar {
+        display: none;
+    }
+    .category-strip a {
+        flex: 0 0 auto;
+        padding: 10px 14px;
+    }
+    .benefit-grid {
+        display: flex;
+        gap: 12px;
+        margin: 0 -14px;
+        overflow-x: auto;
+        padding: 0 14px 6px;
+        scrollbar-width: none;
+    }
+    .benefit-grid::-webkit-scrollbar {
+        display: none;
+    }
+    .benefit-grid article {
+        flex: 0 0 230px;
+        padding: 14px;
+    }
+    .filter-panel {
+        padding: 14px;
+    }
+    .filter-panel .coupon-box {
+        display: none;
+    }
+    .product-grid {
+        gap: 14px;
+        grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+    }
+    .product-card {
+        border-radius: 14px;
+    }
+    .product-media img {
+        aspect-ratio: 1 / 0.86;
+        max-height: 178px;
+    }
+    .stock-badge {
+        bottom: 8px;
+        font-size: 11px;
+        padding: 5px 8px;
+        right: 8px;
+    }
+    .card-body {
+        padding: 12px;
+    }
+    .card-body h2 {
+        font-size: 16px;
+        line-height: 1.18;
+        margin: 4px 0;
+    }
+    .card-body .muted {
+        display: -webkit-box;
+        font-size: 13px;
+        line-height: 1.35;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .rating-line {
+        font-size: 11px;
+        line-height: 1.35;
+    }
+    .price {
+        font-size: 19px;
+        margin: 8px 0;
+    }
+    .product-card .glow-button {
+        padding: 9px 10px;
+    }
+    .floating-cart {
+        bottom: 14px;
+        padding: 11px 14px;
+        right: 14px;
+    }
+    .floating-cart.static {
+        display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .topbar-inner {
+        padding: 9px 10px 7px;
+    }
+    .nav {
+        margin: 0 -10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .hero-market {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .hero-copy h1 {
+        font-size: 34px;
+    }
+    .brand-logo {
+        height: 42px;
+        width: 162px;
+    }
+    .nexora-header-logo {
+        height: 48px;
+        width: 180px;
+    }
+    .hero-copy p {
+        font-size: 15px;
+    }
+    .deal-board {
+        padding: 12px;
+    }
+    .mini-products article {
+        flex-basis: 112px;
+    }
+    .mini-products img {
+        height: 78px;
+    }
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+    .product-media img {
+        max-height: 142px;
+    }
+    .card-body {
+        padding: 10px;
+    }
+    .card-body .eyebrow,
+    .rating-line,
+    .stock-badge,
+    .card-body .muted {
+        font-size: 10px;
+    }
+    .card-body h2 {
+        font-size: 14px;
+    }
+    .price {
+        font-size: 17px;
+    }
+    .product-card .glow-button {
+        font-size: 13px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 340px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-media img {
+        max-height: 190px;
     }
 }

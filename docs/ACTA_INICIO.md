@@ -1,6 +1,6 @@
 # Acta de inicio
 
-Proyecto: MarketFlow - Marketplace para Desarrollo Web Integrado.
+Proyecto: NEXORA - Marketplace para Desarrollo Web Integrado.
 
 Objetivo: implementar una aplicacion web para compra y venta de productos con roles, catalogo, carrito, ordenes de compra, administracion, reseñas, penalizaciones, dashboard y despliegue cloud.
 

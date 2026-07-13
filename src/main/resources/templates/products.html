@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MarketFlow</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>NEXORA</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora2')}">
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
 <main>
     <section class="hero-market">
         <div class="hero-copy">
-            <p class="eyebrow">MarketFlow Prime</p>
+            <p class="eyebrow">NEXORA Prime</p>
             <h1>Compra, vende y controla tu marketplace desde una sola plataforma.</h1>
             <p>Catalogo aprobado por admin, vendedores verificados, cupones, carrito, comprobantes, pagos y reseñas post-compra.</p>
             <form class="hero-search" th:action="@{/products}" method="get">
@@ -20,7 +20,7 @@
             </form>
             <div class="hero-actions">
                 <a class="ghost-button" href="#catalogo">Explorar tienda</a>
-                <a class="ghost-button" th:href="@{/seller}">Publicar producto</a>
+                <a class="ghost-button" th:if="${session.user != null and (session.user.role.name() == 'SELLER' or session.user.role.name() == 'ADMIN')}" th:href="@{/seller}">Publicar producto</a>
             </div>
         </div>
         <div class="deal-board">

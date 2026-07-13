@@ -31,7 +31,7 @@ sudo cp target/marketplace-cloud-1.0.0.jar /opt/marketflow/app.jar
 
 sudo tee /etc/systemd/system/marketflow.service > /dev/null <<'SERVICE'
 [Unit]
-Description=MarketFlow Marketplace
+Description=NEXORA Marketplace
 After=network.target
 
 [Service]
