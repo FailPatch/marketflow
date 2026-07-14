@@ -596,6 +596,65 @@ td { color: var(--muted); }
 .item-row { grid-template-columns: 1fr auto; align-items: center; }
 .payment-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
 .faq-item { margin-bottom: 14px; }
+.help-layout {
+    display: grid;
+    gap: 22px;
+    grid-template-columns: minmax(280px, 0.85fr) minmax(320px, 1fr);
+}
+.status-pill {
+    border-radius: 999px;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 7px 10px;
+    text-transform: uppercase;
+}
+.status-pill.pending {
+    background: rgba(251, 191, 36, 0.14);
+    border: 1px solid rgba(251, 191, 36, 0.34);
+    color: #fde68a;
+}
+.status-pill.done {
+    background: rgba(52, 211, 153, 0.14);
+    border: 1px solid rgba(52, 211, 153, 0.34);
+    color: #86efac;
+}
+.modal-backdrop {
+    align-items: center;
+    background: rgba(5, 2, 10, 0.72);
+    backdrop-filter: blur(12px);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: 20px;
+    position: fixed;
+    z-index: 90;
+}
+.floating-modal {
+    background: linear-gradient(180deg, rgba(35, 18, 57, 0.98), rgba(9, 4, 16, 0.98));
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.52), 0 0 46px rgba(139, 92, 246, 0.22);
+    max-width: 440px;
+    padding: 26px;
+    position: relative;
+    width: min(100%, 440px);
+}
+.floating-modal h2 {
+    font-size: 34px;
+    margin: 4px 0 10px;
+}
+.modal-close {
+    position: absolute;
+    right: 18px;
+    top: 18px;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
 @media (max-width: 900px) {
     .topbar-inner,
     .hero,
@@ -605,7 +664,8 @@ td { color: var(--muted); }
     .checkout-layout,
     .metrics,
     .benefit-grid,
-    .payment-grid {
+    .payment-grid,
+    .help-layout {
         grid-template-columns: 1fr;
     }
     .filter-panel,

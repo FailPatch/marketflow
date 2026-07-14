@@ -1,10 +1,12 @@
 package com.avance.marketflow.service;
 
 import com.avance.marketflow.dao.AuditDao;
+import com.avance.marketflow.dao.HelpMessageDao;
 import com.avance.marketflow.dao.ProductDao;
 import com.avance.marketflow.dao.ReviewDao;
 import com.avance.marketflow.dao.UserDao;
 import com.avance.marketflow.model.CartItem;
+import com.avance.marketflow.model.HelpMessage;
 import com.avance.marketflow.model.Product;
 import com.avance.marketflow.model.Review;
 import com.avance.marketflow.model.User;
@@ -22,12 +24,14 @@ public class MarketplaceService {
     private final UserDao userDao;
     private final ReviewDao reviewDao;
     private final AuditDao auditDao;
+    private final HelpMessageDao helpMessageDao;
 
-    public MarketplaceService(ProductDao productDao, UserDao userDao, ReviewDao reviewDao, AuditDao auditDao) {
+    public MarketplaceService(ProductDao productDao, UserDao userDao, ReviewDao reviewDao, AuditDao auditDao, HelpMessageDao helpMessageDao) {
         this.productDao = productDao;
         this.userDao = userDao;
         this.reviewDao = reviewDao;
         this.auditDao = auditDao;
+        this.helpMessageDao = helpMessageDao;
     }
 
     public List<Product> approvedProducts() {
@@ -167,6 +171,23 @@ public class MarketplaceService {
 
     public List<Review> reviews() {
         return reviewDao.findAll();
+    }
+
+    public HelpMessage sendHelpMessage(String name, String email, String message) {
+        String cleanName = name == null || name.isBlank() ? "Visitante" : name.trim();
+        String cleanEmail = email == null || email.isBlank() ? "sin correo" : email.trim();
+        String cleanMessage = message == null || message.isBlank() ? "Consulta sin detalle." : message.trim();
+        HelpMessage helpMessage = helpMessageDao.save(cleanName, cleanEmail, cleanMessage);
+        auditDao.add("Ayuda", "NUEVA_CONSULTA", cleanName + " envio una consulta al admin.");
+        return helpMessage;
+    }
+
+    public List<HelpMessage> helpMessages() {
+        return helpMessageDao.findAll();
+    }
+
+    public void markHelpMessageRead(long id) {
+        helpMessageDao.findById(id).ifPresent(message -> message.setRead(true));
     }
 
     public void penalizeSeller(String email, String reason) {

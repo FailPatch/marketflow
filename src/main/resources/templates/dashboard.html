@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard</title><link rel="stylesheet" th:href="@{/css/styles.css}"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard</title><link rel="stylesheet" th:href="@{/css/styles.css(v='nexora3')}"></head>
 <body><div th:replace="~{fragments :: header}"></div><main class="container">
 <div class="section-head"><div><p class="eyebrow">Gestion</p><h1>Dashboard</h1><p class="muted">Indicadores para la presentacion final.</p></div></div>
 <section class="metrics"><div class="metric"><span>Productos</span><strong th:text="${products}"></strong></div><div class="metric"><span>Reseñas</span><strong th:text="${reviews}"></strong></div><div class="metric"><span>Arquitectura</span><strong>MVC</strong></div></section>
 <h2>Ultimas acciones</h2><div class="table-wrap"><table><thead><tr><th>Modulo</th><th>Accion</th><th>Detalle</th></tr></thead><tbody><tr th:each="log : ${logs}"><td th:text="${log.module}"></td><td th:text="${log.action}"></td><td th:text="${log.detail}"></td></tr></tbody></table></div>
 </main></body></html>
-

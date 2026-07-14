@@ -121,8 +121,18 @@ public class MarketplaceController {
     }
 
     @GetMapping("/faq")
-    public String faq() {
+    public String faq(@RequestParam(required = false) String sent, Model model) {
+        model.addAttribute("sent", sent != null);
         return "faq";
+    }
+
+    @PostMapping("/faq")
+    public String sendHelp(@RequestParam String message, @RequestParam(required = false) String name, @RequestParam(required = false) String email, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String senderName = user == null ? name : user.getName();
+        String senderEmail = user == null ? email : user.getEmail();
+        marketplaceService.sendHelpMessage(senderName, senderEmail, message);
+        return "redirect:/faq?sent=1";
     }
 
     @SuppressWarnings("unchecked")

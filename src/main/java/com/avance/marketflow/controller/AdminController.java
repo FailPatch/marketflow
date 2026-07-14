@@ -30,6 +30,7 @@ public class AdminController {
         model.addAttribute("products", marketplaceService.allProducts());
         model.addAttribute("sellers", userDao.findSellers());
         model.addAttribute("reviews", marketplaceService.reviews());
+        model.addAttribute("helpMessages", marketplaceService.helpMessages());
         model.addAttribute("logs", auditDao.findAll());
         return "admin";
     }
@@ -53,6 +54,13 @@ public class AdminController {
         if (!isAdmin(session)) return "redirect:/login";
         marketplaceService.removePenalty(email);
         return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/help/read")
+    public String readHelp(@RequestParam long messageId, HttpSession session) {
+        if (!isAdmin(session)) return "redirect:/login";
+        marketplaceService.markHelpMessageRead(messageId);
+        return "redirect:/admin#ayuda-admin";
     }
 
     @GetMapping("/dashboard")

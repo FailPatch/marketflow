@@ -1,6 +1,7 @@
 package com.avance.marketflow;
 
 import com.avance.marketflow.dao.AuditDao;
+import com.avance.marketflow.dao.HelpMessageDao;
 import com.avance.marketflow.dao.ProductDao;
 import com.avance.marketflow.dao.ReviewDao;
 import com.avance.marketflow.dao.UserDao;
@@ -22,7 +23,7 @@ class MarketplaceRulesTest {
     void checkoutRejectsQuantityGreaterThanStock() {
         ProductDao productDao = new ProductDao();
         UserDao userDao = new UserDao();
-        MarketplaceService service = new MarketplaceService(productDao, userDao, new ReviewDao(), new AuditDao());
+        MarketplaceService service = new MarketplaceService(productDao, userDao, new ReviewDao(), new AuditDao(), new HelpMessageDao());
         User buyer = userDao.findByEmail("comprador@demo.com").orElseThrow();
         Product product = productDao.findById(1).orElseThrow();
         List<CartItem> cart = new ArrayList<>();
@@ -37,7 +38,7 @@ class MarketplaceRulesTest {
     void badReviewLowersProductRating() {
         ProductDao productDao = new ProductDao();
         UserDao userDao = new UserDao();
-        MarketplaceService service = new MarketplaceService(productDao, userDao, new ReviewDao(), new AuditDao());
+        MarketplaceService service = new MarketplaceService(productDao, userDao, new ReviewDao(), new AuditDao(), new HelpMessageDao());
         User buyer = userDao.findByEmail("comprador@demo.com").orElseThrow();
         Product product = productDao.findById(1).orElseThrow();
 

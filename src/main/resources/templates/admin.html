@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - NEXORA</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora2')}">
+    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora3')}">
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
@@ -30,6 +30,31 @@
         <div class="metric"><span>Vendedores</span><strong th:text="${#lists.size(sellers)}">0</strong></div>
         <div class="metric"><span>Reseñas</span><strong th:text="${#lists.size(reviews)}">0</strong></div>
     </section>
+
+    <h2 id="ayuda-admin">Consultas de ayuda</h2>
+    <p class="muted">Mensajes enviados desde el apartado Ayuda para que el administrador pueda atenderlos.</p>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Estado</th><th>Fecha</th><th>Usuario</th><th>Correo</th><th>Mensaje</th><th>Accion</th></tr></thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(helpMessages)}"><td colspan="6">Aun no hay consultas de ayuda.</td></tr>
+            <tr th:each="help : ${helpMessages}">
+                <td><span class="status-pill" th:classappend="${help.read ? ' done' : ' pending'}" th:text="${help.read ? 'Atendido' : 'Nuevo'}">Nuevo</span></td>
+                <td th:text="${help.createdAtLabel}"></td>
+                <td th:text="${help.name}"></td>
+                <td th:text="${help.email}"></td>
+                <td th:text="${help.message}"></td>
+                <td>
+                    <form th:if="${!help.read}" th:action="@{/admin/help/read}" method="post">
+                        <input type="hidden" name="messageId" th:value="${help.id}">
+                        <button class="ghost-button" type="submit">Marcar atendido</button>
+                    </form>
+                    <span class="muted" th:if="${help.read}">Listo</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <h2>Productos publicados</h2>
     <div class="table-wrap">

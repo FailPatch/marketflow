@@ -1,11 +1,44 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const logoutModal = document.querySelector("[data-modal-backdrop]");
+    const logoutConfirm = document.querySelector("[data-modal-confirm]");
+    let pendingLogoutUrl = null;
+
+    const closeLogoutModal = () => {
+        if (!logoutModal) {
+            return;
+        }
+        logoutModal.classList.add("hidden");
+        pendingLogoutUrl = null;
+    };
+
     document.querySelectorAll("[data-confirm-logout]").forEach((link) => {
         link.addEventListener("click", (event) => {
-            const confirmed = window.confirm("¿Seguro que deseas cerrar sesión?");
-            if (!confirmed) {
-                event.preventDefault();
+            if (!logoutModal || !logoutConfirm) {
+                return;
+            }
+            event.preventDefault();
+            pendingLogoutUrl = link.href;
+            logoutConfirm.href = pendingLogoutUrl;
+            logoutModal.classList.remove("hidden");
+        });
+    });
+
+    document.querySelectorAll("[data-modal-cancel]").forEach((button) => {
+        button.addEventListener("click", closeLogoutModal);
+    });
+
+    if (logoutModal) {
+        logoutModal.addEventListener("click", (event) => {
+            if (event.target === logoutModal) {
+                closeLogoutModal();
             }
         });
+    }
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeLogoutModal();
+        }
     });
 
     const paymentSelect = document.querySelector("[data-payment-select]");

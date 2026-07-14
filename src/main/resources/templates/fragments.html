@@ -30,7 +30,19 @@
             </div>
         </div>
     </div>
-    <script th:src="@{/js/marketplace.js}" defer></script>
+    <div class="modal-backdrop hidden" data-modal-backdrop>
+        <section class="floating-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+            <button class="icon-button modal-close" type="button" data-modal-cancel>x</button>
+            <p class="eyebrow">Sesion actual</p>
+            <h2 id="logout-title">Cerrar sesion</h2>
+            <p class="muted">Estas a punto de salir de tu cuenta. Puedes cancelar si presionaste la X por error.</p>
+            <div class="modal-actions">
+                <button class="ghost-button" type="button" data-modal-cancel>Cancelar</button>
+                <a class="glow-button" href="#" data-modal-confirm>Cerrar sesion</a>
+            </div>
+        </section>
+    </div>
+    <script th:src="@{/js/marketplace.js(v='nexora3')}" defer></script>
 </header>
 </body>
 </html>
