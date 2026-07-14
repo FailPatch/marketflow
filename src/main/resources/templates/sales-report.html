@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reporte ventas - NEXORA</title><link rel="stylesheet" th:href="@{/css/styles.css(v='nexora5')}"></head>
+<body><div th:replace="~{fragments :: header}"></div><main class="container">
+<div class="section-head"><div><p class="eyebrow">Reporte de ventas</p><h1>Ventas por rango</h1><p class="muted">Busqueda personalizada por fecha de inicio y fecha final.</p></div><div class="actions-row"><a class="ghost-button" th:href="@{/reports}">Volver a reportes</a><a class="ghost-button" th:href="@{/dashboard}">Dashboard</a></div></div>
+<form class="report-filter" th:action="@{/reports/sales}" method="get">
+    <label>Desde <input type="date" name="start" th:value="${start}"></label>
+    <label>Hasta <input type="date" name="end" th:value="${end}"></label>
+    <button class="glow-button" type="submit">Consultar</button>
+    <button class="ghost-button" type="button" onclick="window.print()">Exportar PDF</button>
+</form>
+<section class="dash-metrics">
+    <div class="dash-card"><span>Ventas realizadas</span><strong th:text="${#lists.size(sales)}">0</strong><small>Operaciones</small></div>
+    <div class="dash-card"><span>Total facturado</span><strong>S/ <b th:text="${salesTotal}">0</b></strong><small>Rango seleccionado</small></div>
+    <div class="dash-card"><span>IGV 18%</span><strong>S/ <b th:text="${salesIgv}">0</b></strong><small>Calculo tributario</small></div>
+    <div class="dash-card"><span>Ticket promedio</span><strong>S/ <b th:text="${salesAverage}">0</b></strong><small>Promedio por venta</small></div>
+</section>
+<section class="dash-grid">
+    <article class="dash-panel"><h2>Por metodo de pago</h2><div th:each="entry : ${paymentTotals}" class="bar-row"><span th:text="${entry.key}"></span><strong>S/ <b th:text="${entry.value}"></b></strong></div></article>
+    <article class="dash-panel"><h2>Desglose diario</h2><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Cliente</th><th>Pago</th><th>Comprobante</th><th>Items</th><th>Total</th></tr></thead><tbody><tr th:each="sale : ${sales}"><td th:text="${sale.dateLabel}"></td><td th:text="${sale.buyerEmail}"></td><td th:text="${sale.paymentMethod}"></td><td th:text="${sale.receiptType}"></td><td th:text="${sale.items}"></td><td>S/ <span th:text="${sale.total}"></span></td></tr></tbody></table></div></article>
+</section>
+</main></body></html>

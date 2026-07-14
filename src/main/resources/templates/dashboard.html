@@ -1,8 +1,67 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Dashboard</title><link rel="stylesheet" th:href="@{/css/styles.css(v='nexora3')}"></head>
-<body><div th:replace="~{fragments :: header}"></div><main class="container">
-<div class="section-head"><div><p class="eyebrow">Gestion</p><h1>Dashboard</h1><p class="muted">Indicadores para la presentacion final.</p></div></div>
-<section class="metrics"><div class="metric"><span>Productos</span><strong th:text="${products}"></strong></div><div class="metric"><span>Reseñas</span><strong th:text="${reviews}"></strong></div><div class="metric"><span>Arquitectura</span><strong>MVC</strong></div></section>
-<h2>Ultimas acciones</h2><div class="table-wrap"><table><thead><tr><th>Modulo</th><th>Accion</th><th>Detalle</th></tr></thead><tbody><tr th:each="log : ${logs}"><td th:text="${log.module}"></td><td th:text="${log.action}"></td><td th:text="${log.detail}"></td></tr></tbody></table></div>
-</main></body></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NEXORA</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora5')}">
+</head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+<main class="admin-shell">
+    <aside class="dash-sidebar">
+        <div class="dash-brand">NEXORA<br><span>Panel administrativo</span></div>
+        <a class="active" th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/admin}">Centro admin</a>
+        <a th:href="@{/reports}">Reportes</a>
+        <a th:href="@{/reports/sales}">Reporte de ventas</a>
+        <a th:href="@{/seller}">Productos</a>
+        <a th:href="@{/purchase-order}">Orden de compra</a>
+        <a th:href="@{/providers}">Proveedores</a>
+        <a th:href="@{/performance}">Rendimiento</a>
+    </aside>
+    <section class="dash-content">
+        <div class="dash-top">
+            <div>
+                <p class="eyebrow">Resumen general</p>
+                <h1>Hola, admin</h1>
+                <p class="muted">Control de ventas, catalogo, soporte y auditoria del marketplace.</p>
+            </div>
+            <a class="glow-button" th:href="@{/seller}">+ Nuevo producto</a>
+        </div>
+
+        <section class="dash-metrics">
+            <div class="dash-card"><span>Ventas recientes</span><strong>S/ <b th:text="${salesTotal}">0</b></strong><small>Ultimos 7 dias</small></div>
+            <div class="dash-card"><span>Pedidos</span><strong th:text="${salesCount}">0</strong><small>Ventas registradas</small></div>
+            <div class="dash-card"><span>Productos</span><strong th:text="${products}">0</strong><small>Catalogo general</small></div>
+            <div class="dash-card"><span>Ayuda</span><strong th:text="${#lists.size(helpMessages)}">0</strong><small>Consultas recibidas</small></div>
+        </section>
+
+        <section class="dash-grid">
+            <article class="dash-panel chart-panel">
+                <div class="panel-title"><h2>Ventas ultimos 7 dias</h2><a th:href="@{/reports/sales}">Ver reporte</a></div>
+                <div class="fake-chart">
+                    <span style="height: 24%"></span><span style="height: 36%"></span><span style="height: 28%"></span>
+                    <span style="height: 58%"></span><span style="height: 42%"></span><span style="height: 74%"></span><span style="height: 92%"></span>
+                </div>
+            </article>
+            <article class="dash-panel">
+                <h2>Accesos rapidos</h2>
+                <div class="quick-list">
+                    <a th:href="@{/cart}">Nueva venta</a>
+                    <a th:href="@{/purchase-order}">Nueva orden de compra</a>
+                    <a th:href="@{/seller}">Nuevo producto</a>
+                    <a th:href="@{/reports}">Ver reportes</a>
+                    <a th:href="@{/employees}">Nuevo empleado</a>
+                </div>
+            </article>
+        </section>
+
+        <section class="dash-panel">
+            <div class="panel-title"><h2>Ultimas acciones</h2><a th:href="@{/admin}">Auditoria completa</a></div>
+            <div class="table-wrap"><table><thead><tr><th>Modulo</th><th>Accion</th><th>Detalle</th></tr></thead><tbody><tr th:each="log : ${logs}"><td th:text="${log.module}"></td><td th:text="${log.action}"></td><td th:text="${log.detail}"></td></tr></tbody></table></div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

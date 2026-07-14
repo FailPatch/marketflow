@@ -110,6 +110,17 @@ public class MarketplaceController {
         return "redirect:/seller";
     }
 
+    @PostMapping("/seller/products/update")
+    public String updatePublishedProduct(@RequestParam long productId, @RequestParam String name, @RequestParam String category, @RequestParam String description, @RequestParam BigDecimal price, @RequestParam int stock, @RequestParam(required = false) String imageUrl, @RequestParam(required = false) MultipartFile imageFile, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || (user.getRole() != Role.SELLER && user.getRole() != Role.ADMIN)) {
+            return "redirect:/login";
+        }
+        String newImage = imageFile != null && !imageFile.isEmpty() || imageUrl != null && !imageUrl.isBlank() ? imageSource(imageUrl, imageFile) : "";
+        marketplaceService.updateProduct(productId, name, category, description, price, stock, newImage, user.getEmail(), user.getRole() == Role.ADMIN);
+        return "redirect:/seller";
+    }
+
     @PostMapping("/reviews")
     public String review(@RequestParam String token, @RequestParam int rating, @RequestParam String condition, @RequestParam String comment, HttpSession session) {
         User user = (User) session.getAttribute("user");

@@ -4,19 +4,25 @@ import com.avance.marketflow.dao.AuditDao;
 import com.avance.marketflow.dao.HelpMessageDao;
 import com.avance.marketflow.dao.ProductDao;
 import com.avance.marketflow.dao.ReviewDao;
+import com.avance.marketflow.dao.SaleDao;
 import com.avance.marketflow.dao.UserDao;
 import com.avance.marketflow.model.CartItem;
 import com.avance.marketflow.model.HelpMessage;
 import com.avance.marketflow.model.Product;
 import com.avance.marketflow.model.Review;
+import com.avance.marketflow.model.Sale;
 import com.avance.marketflow.model.User;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class MarketplaceService {
@@ -25,13 +31,15 @@ public class MarketplaceService {
     private final ReviewDao reviewDao;
     private final AuditDao auditDao;
     private final HelpMessageDao helpMessageDao;
+    private final SaleDao saleDao;
 
-    public MarketplaceService(ProductDao productDao, UserDao userDao, ReviewDao reviewDao, AuditDao auditDao, HelpMessageDao helpMessageDao) {
+    public MarketplaceService(ProductDao productDao, UserDao userDao, ReviewDao reviewDao, AuditDao auditDao, HelpMessageDao helpMessageDao, SaleDao saleDao) {
         this.productDao = productDao;
         this.userDao = userDao;
         this.reviewDao = reviewDao;
         this.auditDao = auditDao;
         this.helpMessageDao = helpMessageDao;
+        this.saleDao = saleDao;
     }
 
     public List<Product> approvedProducts() {
@@ -62,6 +70,22 @@ public class MarketplaceService {
         Product product = productDao.save(name, category, description, price, stock, imageUrl, sellerEmail);
         auditDao.add("Catalogo", "PUBLICAR", sellerEmail + " publico " + name + " pendiente de aprobacion.");
         return product;
+    }
+
+    public void updateProduct(long productId, String name, String category, String description, BigDecimal price, int stock, String imageUrl, String sellerEmail, boolean admin) {
+        productDao.findById(productId)
+                .filter(product -> admin || product.getSellerEmail().equalsIgnoreCase(sellerEmail))
+                .ifPresent(product -> {
+                    product.setName(name);
+                    product.setCategory(category);
+                    product.setDescription(description);
+                    product.setPrice(price);
+                    product.setStock(stock);
+                    if (imageUrl != null && !imageUrl.isBlank()) {
+                        product.setImageUrl(imageUrl);
+                    }
+                    auditDao.add("Catalogo", "ACTUALIZAR_PRODUCTO", sellerEmail + " actualizo " + name);
+                });
     }
 
     public void toggleProduct(long productId) {
@@ -137,6 +161,10 @@ public class MarketplaceService {
 
     public List<String> checkout(User buyer, List<CartItem> cart, String payment, String receipt, String coupon) {
         List<String> reviewTokens = new ArrayList<>();
+        BigDecimal subtotal = total(cart);
+        BigDecimal appliedDiscount = discount(cart, coupon);
+        BigDecimal payable = payableTotal(cart, coupon);
+        int items = itemCount(cart);
         for (CartItem item : cart) {
             if (item.getQuantity() > item.getProduct().getStock()) {
                 throw new IllegalStateException("Stock insuficiente para " + item.getProduct().getName());
@@ -156,6 +184,7 @@ public class MarketplaceService {
         if (buyer.getPurchases() >= 3 && !buyer.getCoupons().contains("REGALO100")) {
             buyer.getCoupons().add("REGALO100");
         }
+        saleDao.save(buyer.getEmail(), payment, receipt, items, subtotal, appliedDiscount, payable);
         auditDao.add("Ventas", "CONFIRMAR_COMPRA", buyer.getEmail() + " pago con " + payment + " y comprobante " + receipt);
         cart.clear();
         return reviewTokens;
@@ -186,8 +215,47 @@ public class MarketplaceService {
         return helpMessageDao.findAll();
     }
 
-    public void markHelpMessageRead(long id) {
-        helpMessageDao.findById(id).ifPresent(message -> message.setRead(true));
+    public void updateHelpMessage(long id, String status, String adminNote, String sellerEmail) {
+        helpMessageDao.findById(id).ifPresent(message -> {
+            message.setStatus(status);
+            message.setAdminNote(adminNote == null ? "" : adminNote.trim());
+            message.setSellerEmail(sellerEmail == null ? "" : sellerEmail.trim());
+            if (sellerEmail != null && !sellerEmail.isBlank() && adminNote != null && !adminNote.isBlank()) {
+                userDao.findByEmail(sellerEmail).ifPresent(seller -> seller.getAdminMessages().add(0, "Ayuda #" + id + " - " + status + ": " + adminNote));
+            }
+            auditDao.add("Ayuda", "ACTUALIZAR_CONSULTA", "Consulta #" + id + " marcada como " + status);
+        });
+    }
+
+    public List<Sale> salesBetween(LocalDate start, LocalDate end) {
+        return saleDao.findAll().stream()
+                .filter(sale -> !sale.getDate().isBefore(start))
+                .filter(sale -> !sale.getDate().isAfter(end))
+                .sorted(Comparator.comparing(Sale::getDate).reversed())
+                .toList();
+    }
+
+    public BigDecimal salesTotal(List<Sale> sales) {
+        return sales.stream().map(Sale::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal salesIgv(List<Sale> sales) {
+        return salesTotal(sales).multiply(new BigDecimal("0.18")).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal salesAverage(List<Sale> sales) {
+        if (sales.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+        return salesTotal(sales).divide(new BigDecimal(sales.size()), 2, RoundingMode.HALF_UP);
+    }
+
+    public Map<String, BigDecimal> totalsByPayment(List<Sale> sales) {
+        Map<String, BigDecimal> totals = new LinkedHashMap<>();
+        for (Sale sale : sales) {
+            totals.merge(sale.getPaymentMethod(), sale.getTotal(), BigDecimal::add);
+        }
+        return totals;
     }
 
     public void penalizeSeller(String email, String reason) {

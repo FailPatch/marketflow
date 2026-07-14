@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Reportes - NEXORA</title><link rel="stylesheet" th:href="@{/css/styles.css(v='nexora5')}"></head>
+<body><div th:replace="~{fragments :: header}"></div><main class="container">
+<div class="section-head"><div><p class="eyebrow">Analitica</p><h1>Reportes</h1><p class="muted">Consulta informacion del sistema y prepara evidencias para la presentacion.</p></div><a class="ghost-button" th:href="@{/dashboard}">Volver al dashboard</a></div>
+<section class="report-cards">
+    <article class="report-card"><span>▥</span><h2>Ventas por rango</h2><p class="muted">Filtra ventas por fecha, metodo de pago, comprobante, IGV y total facturado.</p><a class="glow-button" th:href="@{/reports/sales}">Ver reporte</a></article>
+    <article class="report-card"><span>◎</span><h2>Ventas por cliente</h2><p class="muted">Ranking de compradores frecuentes, compras registradas y total gastado.</p><a class="ghost-button" th:href="@{/admin}">Ver clientes</a></article>
+    <article class="report-card"><span>□</span><h2>Productos y stock</h2><p class="muted">Productos aprobados, pausados, stock disponible y publicaciones del vendedor.</p><a class="ghost-button" th:href="@{/seller}">Ver productos</a></article>
+</section>
+</main></body></html>

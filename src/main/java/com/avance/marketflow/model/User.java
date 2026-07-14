@@ -14,6 +14,7 @@ public class User {
     private boolean active = true;
     private final List<String> coupons = new ArrayList<>();
     private final List<String> penaltyReasons = new ArrayList<>();
+    private final List<String> adminMessages = new ArrayList<>();
 
     public User(long id, String name, String email, String password, Role role) {
         this.id = id;
@@ -33,9 +34,9 @@ public class User {
     public boolean isActive() { return active; }
     public List<String> getCoupons() { return coupons; }
     public List<String> getPenaltyReasons() { return penaltyReasons; }
+    public List<String> getAdminMessages() { return adminMessages; }
 
     public void setPurchases(int purchases) { this.purchases = purchases; }
     public void setPenalties(int penalties) { this.penalties = penalties; }
     public void setActive(boolean active) { this.active = active; }
 }
-

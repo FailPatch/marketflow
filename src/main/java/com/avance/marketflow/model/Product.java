@@ -49,6 +49,11 @@ public class Product {
 
     public void setStock(int stock) { this.stock = stock; }
     public void setApproved(boolean approved) { this.approved = approved; }
+    public void setName(String name) { this.name = name; }
+    public void setCategory(String category) { this.category = category; }
+    public void setDescription(String description) { this.description = description; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public void addRating(int rating) {
         if (reviewCount == 0) {

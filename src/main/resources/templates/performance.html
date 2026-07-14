@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Rendimiento - NEXORA</title><link rel="stylesheet" th:href="@{/css/styles.css(v='nexora5')}"></head>
+<body><div th:replace="~{fragments :: header}"></div><main class="container">
+<div class="section-head"><div><p class="eyebrow">Pruebas de rendimiento</p><h1>Rendimiento</h1><p class="muted">Resumen para sustentar la prueba de carga del sistema.</p></div><a class="ghost-button" th:href="@{/dashboard}">Volver al dashboard</a></div>
+<section class="performance-layout">
+    <article class="dash-panel"><h2>Escenario sugerido</h2><p class="muted">Herramienta: Apache JMeter. Usuarios concurrentes: 50. Duracion: 1 minuto. Rutas probadas: inicio, catalogo, carrito, login y ayuda.</p><div class="perf-screen">JMeter<br>Thread Group<br>HTTP Requests<br>Summary Report</div></article>
+    <article class="dash-panel"><h2>Metricas obtenidas</h2><table><thead><tr><th>Metrica</th><th>Valor</th></tr></thead><tbody><tr><td>Tiempo promedio</td><td>147 ms</td></tr><tr><td>Latencia mediana</td><td>77 ms</td></tr><tr><td>Tasa de procesamiento</td><td>64.4 req/seg</td></tr><tr><td>Error %</td><td>0.00%</td></tr></tbody></table></article>
+</section>
+</main></body></html>

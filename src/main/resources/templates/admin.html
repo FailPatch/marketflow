@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - NEXORA</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora3')}">
+    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora5')}">
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
@@ -33,28 +33,39 @@
 
     <h2 id="ayuda-admin">Consultas de ayuda</h2>
     <p class="muted">Mensajes enviados desde el apartado Ayuda para que el administrador pueda atenderlos.</p>
-    <div class="table-wrap">
-        <table>
-            <thead><tr><th>Estado</th><th>Fecha</th><th>Usuario</th><th>Correo</th><th>Mensaje</th><th>Accion</th></tr></thead>
-            <tbody>
-            <tr th:if="${#lists.isEmpty(helpMessages)}"><td colspan="6">Aun no hay consultas de ayuda.</td></tr>
-            <tr th:each="help : ${helpMessages}">
-                <td><span class="status-pill" th:classappend="${help.read ? ' done' : ' pending'}" th:text="${help.read ? 'Atendido' : 'Nuevo'}">Nuevo</span></td>
-                <td th:text="${help.createdAtLabel}"></td>
-                <td th:text="${help.name}"></td>
-                <td th:text="${help.email}"></td>
-                <td th:text="${help.message}"></td>
-                <td>
-                    <form th:if="${!help.read}" th:action="@{/admin/help/read}" method="post">
-                        <input type="hidden" name="messageId" th:value="${help.id}">
-                        <button class="ghost-button" type="submit">Marcar atendido</button>
-                    </form>
-                    <span class="muted" th:if="${help.read}">Listo</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <p class="muted" th:if="${#lists.isEmpty(helpMessages)}">Aun no hay consultas de ayuda.</p>
+    <section class="help-admin-grid">
+        <article class="help-ticket" th:each="help : ${helpMessages}">
+            <div>
+                <span class="status-pill" th:classappend="${help.status == 'Verificado' || help.status == 'Cerrado' ? ' done' : ' pending'}" th:text="${help.status}">Nuevo</span>
+                <small th:text="${help.createdAtLabel}"></small>
+            </div>
+            <h3 th:text="${help.name}">Usuario</h3>
+            <p class="muted" th:text="${help.email}">correo</p>
+            <p th:text="${help.message}">Mensaje</p>
+            <p class="success" th:if="${!#strings.isEmpty(help.adminNote)}" th:text="${help.adminNote}">Nota admin</p>
+            <form th:action="@{/admin/help/read}" method="post" class="help-action-form">
+                <input type="hidden" name="messageId" th:value="${help.id}">
+                <label>Estado
+                    <select name="status">
+                        <option th:selected="${help.status == 'En proceso'}">En proceso</option>
+                        <option th:selected="${help.status == 'Verificado'}">Verificado</option>
+                        <option th:selected="${help.status == 'Cerrado'}">Cerrado</option>
+                    </select>
+                </label>
+                <label>Notificar vendedor
+                    <select name="sellerEmail">
+                        <option value="">Sin vendedor</option>
+                        <option th:each="seller : ${sellers}" th:value="${seller.email}" th:text="${seller.email}" th:selected="${seller.email == help.sellerEmail}"></option>
+                    </select>
+                </label>
+                <label class="wide">Mensaje del admin
+                    <textarea name="adminNote" placeholder="Ejemplo: revisar stock del producto reportado" th:text="${help.adminNote}"></textarea>
+                </label>
+                <button class="ghost-button" type="submit">Actualizar ayuda</button>
+            </form>
+        </article>
+    </section>
 
     <h2>Productos publicados</h2>
     <div class="table-wrap">

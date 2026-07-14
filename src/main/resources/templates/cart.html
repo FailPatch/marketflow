@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito - NEXORA</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora3')}">
+    <link rel="stylesheet" th:href="@{/css/styles.css(v='nexora6')}">
 </head>
 <body>
 <div th:replace="~{fragments :: header}"></div>
@@ -26,6 +26,10 @@
                     <p class="eyebrow" th:text="${item.product.category}">Categoria</p>
                     <h2 th:text="${item.product.name}">Producto</h2>
                     <p class="muted">S/ <span th:text="${item.product.price}">0.00</span> por unidad</p>
+                    <div class="cart-stock-line">
+                        <span class="stock-chip">Stock disponible: <strong th:text="${item.product.stock}">0</strong></span>
+                        <span class="stock-chip soft">En carrito: <strong th:text="${item.quantity}">1</strong></span>
+                    </div>
                     <strong>S/ <span th:text="${item.subtotal}">0.00</span></strong>
                 </div>
                 <div class="qty-actions">
